@@ -2,28 +2,30 @@ import mongoose from "mongoose";
 
 // An interface that describes the properties
 // that are requried to create a new product
-interface productAttrs {
+interface ProductAttrs {
   title: string;
   description: string;
-  headerImage?: string;
-  price?: string;
+  image?: string;
+  price?: number;
   published?: boolean;
+  stripeProductId: string;
 }
 
 // An interface that describes the properties
-// that a product Model has
-interface productModel extends mongoose.Model<productDoc> {
-  build(attrs: productAttrs): productDoc;
+// that a Product Model has
+interface ProductModel extends mongoose.Model<ProductDoc> {
+  build(attrs: ProductAttrs): ProductDoc;
 }
 
 // An interface that describes the properties
-// that a product Document has
-interface productDoc extends mongoose.Document {
+// that a Product Document has
+interface ProductDoc extends mongoose.Document {
   title: string;
   description: string;
-  headerImage?: string;
-  price?: string;
+  image?: string;
+  price?: number;
   published?: boolean;
+  stripeProductId: string;
   version: number;
 }
 
@@ -37,11 +39,23 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    headerImage: {
+    image: {
       type: String,
     },
     published: {
       type: Boolean,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    stripeProductId: {
+      type: String,
+      required: true,
+    },
+    stripePriceId: {
+      type: String,
       required: true,
     },
   },
@@ -58,13 +72,13 @@ const productSchema = new mongoose.Schema(
 
 productSchema.set("versionKey", "version");
 
-productSchema.statics.build = (attrs: productAttrs) => {
-  return new product(attrs);
+productSchema.statics.build = (attrs: ProductAttrs) => {
+  return new Product(attrs);
 };
 
-const product = mongoose.model<productDoc, productModel>(
+const Product = mongoose.model<ProductDoc, ProductModel>(
   "product",
   productSchema
 );
 
-export { product };
+export { Product };

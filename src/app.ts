@@ -7,7 +7,9 @@ import { NotFoundError } from "./errors/not-found-error";
 import { errorHandler } from "./middlewares/error-handler";
 import { currentUser } from "./middlewares/current-user";
 
-import { signupRouter } from "./routes/users/sign-up";
+// User Routes
+
+import { signupRouter } from "./routes/users/user-create";
 import { signinRouter } from "./routes/users/sign-in";
 import { signoutRouter } from "./routes/users/sign-out";
 
@@ -15,6 +17,16 @@ import { updateProfile } from "./routes/users/profile-update";
 import { deactivateProfile } from "./routes/users/profile-deactivate";
 import { currentUserRouter } from "./routes/users/get-user";
 import { validateProfileAuthenticationFactor } from "./routes/users/profile-authentication-factor-validation";
+
+// Blogs
+
+// Comments
+
+// Products
+
+// Product Categories
+
+// Orders
 
 const app = express();
 app.set("trust proxy", true);

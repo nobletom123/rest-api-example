@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 interface CommentAttrs {
   text: string;
   user: string;
+  product?: string;
+  blog?: string;
 }
 
 // An interface that describes the properties

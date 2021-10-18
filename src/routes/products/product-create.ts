@@ -3,54 +3,53 @@ import { body } from "express-validator";
 
 import { requireAuth } from "../../middlewares/require-auth";
 import { validateRequest } from "../../middlewares/validate-request";
-
 import { BadRequestError } from "../../errors/bad-request-error";
-
-import { NoeraObject } from "../../models/object";
-import { Module } from "../../models/module";
-
-import { checkTypeForObject } from "../../library/types/type-parser";
-import { objectRelationHandler } from "../../library/objects/object-relation-handler";
-import { checkModuleAccess } from "../../library/permissions/module-access";
+import { stripe } from "../../stripe";
+import { Product } from "../../models/products";
+import { parsePrice } from "../../library/parse-price";
 
 const router = express.Router();
 
 router.post(
-  "/api/objects/models",
+  "/products",
   requireAuth,
-  [body("title").isString(), body("description").isString()],
+  [
+    body("title").isString(),
+    body("description").isString(),
+    body("price").isNumeric(),
+  ],
   validateRequest,
   // eslint-disable-next-line complexity
   async (request: Request, response: Response) => {
-    console.log("test");
-    const { name, fields, moduleId } = request.body;
+    const { title, description, image, price: requestPrice } = request.body;
     const userId = request.currentUser!.id;
-    const module = await checkModuleAccess({
-      userId,
-      moduleId,
-      permissionToCheck: {
-        modulePermission: "model:create",
-      },
+
+    const price = parsePrice(requestPrice);
+
+    const newStripeProduct = await stripe.products.create({
+      name: title,
+      description,
+      ...(image && { image }),
     });
 
-    const buildObject: { name: string; fields: any[]; module: string } = {
-      name,
-      fields: [],
-      module: module.id,
+    const newStripePrice = await stripe.prices.create({
+      product: newStripeProduct.id,
+      currency: "GBP",
+      unit_amount: price,
+    });
+
+    const newProductData = {
+      title,
+      description,
+      stripeProductId: newStripeProduct.id,
+      stripePriceId: newStripePrice.id,
     };
-    if (fields && Array.isArray(fields)) {
-      const allFieldsAreValid = fields.every((fieldObject) =>
-        checkTypeForObject(fieldObject)
-      );
-      if (!allFieldsAreValid) {
-        throw new BadRequestError("Fields incorrect");
-      }
-      buildObject.fields = fields;
-    }
-    const newObject = NoeraObject.build(buildObject);
-    await newObject.save();
-    response.status(201).send(newObject);
+
+    const newProduct = Product.build(newProductData);
+
+    await newProduct.save();
+    response.status(201).send(newProduct);
   }
 );
 
-export { router as modelCreate };
+export { router as productCreate };

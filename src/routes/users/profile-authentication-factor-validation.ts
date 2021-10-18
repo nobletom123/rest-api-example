@@ -1,19 +1,16 @@
 import express, { Request, Response } from "express";
-import {
-  NotAuthorizedError,
-  NotFoundError,
-  validateRequest,
-} from "@noereum/common";
 import jwt from "jsonwebtoken";
 import { body } from "express-validator";
-
-import { verifyEmailToken } from "../library/verify-token";
-import { User } from "../models/user";
+import { validateRequest } from "../../middlewares/validate-request";
+import { NotFoundError } from "../../errors/not-found-error";
+import { NotAuthorizedError } from "../../errors/not-authorized-error";
+import { verifyEmailToken } from "../../library/verify-token";
+import { User } from "../../models/user";
 
 const router = express.Router();
 
 router.post(
-  "/api/auth/profiles/authentication-factor",
+  "/users/authentication-factor",
   [body("emailToken").not().isEmpty().isString()],
   validateRequest,
   async (request: Request, response: Response) => {

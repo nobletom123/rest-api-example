@@ -1,18 +1,17 @@
 import express, { Request, Response } from "express";
-import {
-  requireAuth,
-  NotFoundError,
-  NotAuthorizedError,
-  validateRequest,
-} from "@noereum/common";
-import { User } from "../models/user";
-import { param } from "express-validator";
 import { isValidObjectId } from "mongoose";
+import { param } from "express-validator";
+
+import { NotAuthorizedError } from "../../errors/not-authorized-error";
+import { NotFoundError } from "../../errors/not-found-error";
+import { requireAuth } from "../../middlewares/require-auth";
+import { validateRequest } from "../../middlewares/validate-request";
+import { User } from "../../models/user";
 
 const router = express.Router();
 
 router.delete(
-  "/api/auth/profiles/:id",
+  "/users/:id",
   requireAuth,
   [param("id").custom((id) => isValidObjectId(id))],
   validateRequest,

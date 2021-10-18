@@ -18,7 +18,9 @@ interface ProductCategoryModel extends mongoose.Model<ProductCategoryDoc> {
 // An interface that describes the properties
 // that a ProductCategory Document has
 interface ProductCategoryDoc extends mongoose.Document {
-  text: string;
+  title: string;
+  description: string;
+  image?: string;
   version: number;
 }
 

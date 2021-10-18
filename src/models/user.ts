@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { Password } from "../services/password";
-import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 // An interface that describes the properties
 // that are requried to create a new User
@@ -9,6 +8,7 @@ interface UserAttrs {
   password: string;
   firstName: string;
   lastName: string;
+  stripeCustomerId: string;
   emailValidated?: boolean;
 }
 
@@ -30,6 +30,7 @@ interface UserDoc extends mongoose.Document {
   mobileValidated: boolean;
   accountActive: boolean;
   version: number;
+  stripeCustomerId: string;
   pendingEmail: string | null;
 }
 
@@ -69,6 +70,10 @@ const userSchema = new mongoose.Schema(
     },
     pendingEmail: {
       type: String,
+    },
+    stripeCustomerId: {
+      type: String,
+      required: true,
     },
   },
   {

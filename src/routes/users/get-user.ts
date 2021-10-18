@@ -1,10 +1,11 @@
 import express, { Request } from "express";
-import { currentUser, requireAuth } from "@noereum/common";
-import { User } from "../models/user";
+import { requireAuth } from "../../middlewares/require-auth";
+
+import { User } from "../../models/user";
 
 const router = express.Router();
 
-router.get("/api/auth/currentuser", requireAuth, async (req, res) => {
+router.get("/current-user", requireAuth, async (req, res) => {
   const userId = req.currentUser?.id;
 
   if (!userId) {
