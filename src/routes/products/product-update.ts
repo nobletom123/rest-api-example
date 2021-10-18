@@ -51,4 +51,4 @@ router.put(
   }
 );
 
-export { router as productCreate };
+export { router as productUpdate };

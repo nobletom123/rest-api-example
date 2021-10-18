@@ -13,4 +13,4 @@ router.get("/blogs", async (request: Request, response: Response) => {
   response.status(200).send(blogs);
 });
 
-export { router as blogMany };
+export { router as blogGetMany };

@@ -16,8 +16,6 @@ beforeAll(async () => {
   process.env.JWT_KEY = "asdfasdf";
   process.env.JWT_SECRET = "asdfasdf";
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-  process.env.SENDGRID_API_KEY =
-    "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";
   process.env.ADMIN_PASSWORD = "test-admin-password";
 
   mongo = new MongoMemoryServer();
